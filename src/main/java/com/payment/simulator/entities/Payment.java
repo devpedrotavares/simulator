@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table
 public class Payment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,13 +27,6 @@ public class Payment implements Serializable {
 
     public Payment(Long id, BigDecimal value, String paymentType, LocalDateTime dateTime, Long cardId) {
         this.id = id;
-        this.value = value;
-        this.paymentType = paymentType;
-        this.dateTime = dateTime;
-        this.cardId = cardId;
-    }
-
-    public Payment(BigDecimal value, String paymentType, LocalDateTime dateTime, Long cardId) {
         this.value = value;
         this.paymentType = paymentType;
         this.dateTime = dateTime;
@@ -73,6 +65,14 @@ public class Payment implements Serializable {
         this.dateTime = dateTime;
     }
 
+    public Long getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(Long card) {
+        this.cardId = card;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,13 +87,5 @@ public class Payment implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public Long getCardId() {
-        return cardId;
-    }
-
-    public void setCardId(Long card) {
-        this.cardId = card;
     }
 }

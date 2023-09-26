@@ -23,13 +23,6 @@ public class PaymentResource {
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<List<Payment>> getPaymentsByCardId(@PathVariable Long id) {
-		List<Payment> payments = paymentService.getPaymentsByCardId(id);
-
-		return ResponseEntity.ok().body(payments);
-	}
-
-	@GetMapping(value = "/{id}")
 	public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
 		Payment payment = paymentService.getPaymentById(id);
 
