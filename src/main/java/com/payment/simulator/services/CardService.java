@@ -44,10 +44,12 @@ public class CardService {
         _validateCard(card);
 
         existingCard.setBalance(card.getBalance());
-        existingCard.setName(card.getName());
-        existingCard.setNumber(card.getNumber());
+        existingCard.setExpirationDate(card.getExpirationDate());
         existingCard.setInvoice(card.getInvoice());
         existingCard.setLimit(card.getLimit());
+        existingCard.setName(card.getName());
+        existingCard.setNumber(card.getNumber());
+        existingCard.setPassword(card.getPassword());
         existingCard.setSecurityCode(card.getSecurityCode());
 
         return cardRepository.save(existingCard);

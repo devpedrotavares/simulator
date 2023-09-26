@@ -38,10 +38,12 @@ public class Card implements Serializable {
 
     private List<Payment> payments;
 
+    private String password;
+
     public Card() {
     }
 
-    public Card(Long id, String items, String number, String name, String securityCode, LocalDate expirationDate, BigDecimal invoice, BigDecimal balance, BigDecimal limit, List<Payment> payments) {
+    public Card(Long id, String items, String number, String name, String securityCode, LocalDate expirationDate, BigDecimal invoice, BigDecimal balance, BigDecimal limit, List<Payment> payments, String password) {
         this.id = id;
         this.number = number;
         this.name = name;
@@ -51,6 +53,7 @@ public class Card implements Serializable {
         this.balance = balance;
         this.limit = limit;
         this.payments = payments;
+        this.password = password;
     }
 
     public Long getId() {
@@ -124,6 +127,14 @@ public class Card implements Serializable {
 
     public void setLimit(BigDecimal limit) {
         this.limit = limit;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

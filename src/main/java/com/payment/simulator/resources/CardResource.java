@@ -37,7 +37,15 @@ public class CardResource {
 				.body(card);
 	}
 
-	@CrossOrigin(origins = "*")
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<Card> putCard(@PathVariable Long id, @RequestBody Card card) {
+		card = cardService.updateCardById(id, card);
+
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(card);
+	}
+
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deleteCard(@PathVariable Long id) {
 		cardService.deleteCardById(id);
