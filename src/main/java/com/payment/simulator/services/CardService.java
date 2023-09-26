@@ -4,7 +4,6 @@ import com.payment.simulator.entities.Card;
 import com.payment.simulator.repositories.CardRepository;
 import com.payment.simulator.services.exceptions.InvalidCardException;
 import com.payment.simulator.services.exceptions.ResourceNotFoundException;
-import com.payment.simulator.services.util.ValidatorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
