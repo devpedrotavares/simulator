@@ -9,23 +9,73 @@ function CreateCardPage() {
     const [number, setNumber] = useState("");
     const [securityCode, setSecurityCode] = useState("");
 
+    const BASE_URL = "http://localhost:8080";
+
+    async function postCard() {
+        try{
+            const response = await fetch(BASE_URL + "/card", {
+                method: 'POST',
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    balance,
+                    expirationDate,
+                    invoice,
+                    limit,
+                    name,
+                    number,
+                    securityCode
+                })
+            })
+
+            if(response.ok){
+                alert("O cartão foi cadastrado com sucesso");
+            }
+            else{
+                const body = await response.json();
+                alert(body.message);
+            }
+
+        } 
+        catch(error){
+            alert("Um erro ocorreu...");
+            console.log(error);
+        }
+    }
+
     return(
         <>
-            <h2>Create Card Page</h2>
+            <div className="header"> 
+                <img className="card_vector" src={require('./images/image2.png')} alt="Vetor de cartão"/> 
+                <h2> Adicionar cartões </h2> 
+            </div>
 
-            <input type="number" onChange={(event)=>setBalance(event.target.value)}></input>
+            <div> Número do cartão 
+                <input type="number" onChange={(event)=>setNumber(event.target.value)}></input> 
+            </div>
 
-            <input type="date" onChange={(event)=>setExpirationDate(event.target.value)}></input>
+            <div> 
+                Saldo <input type="number" placeholder="R$" onChange={(event)=>setBalance(event.target.value)}></input> 
+                Limite <input type="number" placeholder="R$" onChange={(event)=>setLimit(event.target.value)}></input> 
+            </div>
 
-            <input type="number" onChange={(event)=>setInvoice(event.target.value)}></input>
+            <div> 
+                Titular <input onChange={(event)=>{setName(event.target.value)}}></input>
+                Fatura <input type="number" placeholder="R$" onChange={(event)=>setInvoice(event.target.value)}></input>
+            </div>
 
-            <input type="number" onChange={(event)=>setLimit(event.target.value)}></input>
+            <div> 
+                Data de expiração <input type="date" onChange={(event)=>setExpirationDate(event.target.value)}></input> 
+            </div>
             
-            <input onChange={(event)=>{setName(event.target.value)}}></input>
+            <div> 
+                Código de segurança <input onChange={(event)=>{setSecurityCode(event.target.value)}}></input> 
+            </div>
 
-            <input type="number" onChange={(event)=>setNumber(event.target.value)}></input>
-
-            <input onChange={(event)=>{setSecurityCode(event.target.value)}}></input>
+            <div> 
+                <button id="comece_simular" onClick={postCard}> Adicionar cartão </button> 
+            </div>
         </>
     );
 }

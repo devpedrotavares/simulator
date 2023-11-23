@@ -1,29 +1,50 @@
 import {useState} from 'react';
 import PaymentPage from "./PaymentPage"
 import CreateCardPage from './CreateCardPage';
+import InitialPage from './InitialPage';
+import AboutUsPage from './AboutUsPage';
+import ContactPage from './ContactPage';
+import "./css/styles.css"
 
 function App() {
-  const [currentPage, setCurrentPage] = useState("InitialPage");
+  const [currentPage, setCurrentPage] = useState(<InitialPage/>);
 
   return (
     <>
-    <header setCurrentPage={setCurrentPage}>
-      This will be the side bar 
+    <div className="wrapper">
 
-      <button onClick={() => {setCurrentPage("PaymentPage")}}>Simular</button>
-      <button onClick={() => {setCurrentPage("CreateCardPage")}}>Adicionar Cartão</button>
-      <button onClick={() => {setCurrentPage("InitialPage")}}>Início</button>
-    </header>
+        <div className="sidebar">
+          <h2>SimuladorDePagamentos</h2>
+            <ul>
+                <li onClick={() => {setCurrentPage(<InitialPage setPage={() => setCurrentPage(<PaymentPage/>)}/>)}}>
+                  <a><i className="fas fa-home"></i>Início</a>
+                </li>
+                <li onClick={() => {setCurrentPage(<CreateCardPage/>)}}>
+                  <a><i className="fas fa-user"></i>Adicionar cartões</a>
+                </li>
+                <li onClick={() => {setCurrentPage(<PaymentPage/>)}}>
+                  <a><i className="fas fa-address-card"></i>Simulador</a>
+                </li>
+                <li onClick={() => {setCurrentPage(<AboutUsPage/>)}}>
+                  <a><i className="fas fa-project-diagram"></i>Sobre nós</a>
+                </li>
+                <li onClick={() => {setCurrentPage(<ContactPage/>)}}>
+                  <a><i className="fas fa-blog"></i>Contato</a>
+                </li>
+            </ul>
 
-    <br></br>
+          <div className="social_media">
+            <a href="#"><i className="fab fa-facebook-f"></i> <img className="github_vector" src={require('./images/image4.png')} alt="Vetor do Github"/></a>
+          </div>
 
-    {currentPage === "PaymentPage" ? 
-        <PaymentPage></PaymentPage>
-        :
-        (currentPage === "CreateCardPage" ? <CreateCardPage></CreateCardPage>
-          : <h2>Welcome to the Initial Page</h2>
-          )
-    }
+        </div>
+
+        <div className="main_content">
+          <div className="info">
+            {currentPage}
+          </div>
+        </div>
+    </div>
     </>
   );
 }

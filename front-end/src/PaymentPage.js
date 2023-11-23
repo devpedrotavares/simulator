@@ -2,28 +2,33 @@ import {useState, useEffect} from 'react';
 
 function PaymentPage() {
     const [cards, setCards] = useState([]);
-    const [selectedCard, setSelectedCard] = useState({});
+    const [selectedCardId, setSelectedCardId] = useState(0);
     const [value, setValue] = useState(0);
-    const [type, setType] = useState("");
+    const [paymentType, setPaymentType] = useState("debit");
 
     const BASE_URL = "http://localhost:8080";
 
-    async function postPayment(payment) {
+    async function postPayment() {
       try{
         const response = await fetch(BASE_URL + "/payment", {
           method: 'POST',
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(payment)
+          body: JSON.stringify({
+            "cardId":selectedCardId,
+            "value":value,
+            "paymentType":paymentType
+          })
         })
 
         if(response.ok){
           alert("O pagamento foi efetuado com sucesso");
-        }
-        else{
-          alert("Não foi possível efetuar o pagamento...");
-        }
+      }
+      else{
+          const body = await response.json();
+          alert(body.message);
+      }
 
       } catch(error){
           alert("Um erro ocorreu...");
@@ -47,47 +52,44 @@ function PaymentPage() {
     }
   
       useEffect(() => {
-        fetchCards()
+        fetchCards();
       }, []);
 
-      const onCardSelect = (event) => {
-        const newSelectedCard = cards.filter(card => card.id === event.target.value);
+  return(<>
+            <div class="header"> 
+              <img class="card_vector" src={require("./images/image2.png")} alt="Vetor de cartão"/>
+              <h2> Simulando pagamentos </h2> 
+            </div>
+            
+            <div>
+              Selecione o cartão
+              <select onChange={(event) => setSelectedCardId(event.target.value)}>
+                    <option value={0}>Selecione o cartão</option>
+                    {cards.map(card => (
+                      <option key={card.id} value={card.id}> {card.name + " - " + card.number} </option>
+                    ))}
+              </select>
 
-        setSelectedCard(newSelectedCard);
-      }
+              </div>
 
-      function handlePayment() {
-          postPayment({
-            "cardId" : selectedCard.id,
-            "type": type,
-            "value": value
-          })
-      }
+              <div>
+                Selecione o tipo da operação
+                <select onChange={(event) => {setPaymentType(event.target.value)}}>
+                    <option value="">Selecione</option>
+                    <option value="credit">Crédito</option>
+                    <option value="debit">Débito</option>
+                </select>
+              </div>
+              
 
-    return(
-        <>
-        <p>Selecione o cartão</p>
-        
-        <select onChange={onCardSelect}>
-              {cards.map(card => (
-                <option value={card.id}> {card.name + " - " + card.number} </option>
-              ))}
-        </select>
+              <div>
+                Defina o valor
+                <input type="number" placeholder="R$" onChange={(event) => {setValue(event.target.value)}}/>
+              </div>
 
-        <p>Selecione o tipo da operação</p>
-
-        <select onChange={(event) => {setType(event.target.value)}}>
-              <option value="credit">Crédito</option>
-              <option value="debit">Débito</option>
-        </select>
-
-        <p>Defina o valor</p>
-
-        <input type="number" onChange={(event) => {setValue(event.target.value)}}/>
-
-        <button onClick={handlePayment}>Realizar pagamento
-        </button>
-        
+              <div>
+                <button id="comece_simular" onClick={postPayment}>Realizar pagamento</button>
+              </div>
         </>
     );
 }
