@@ -3,6 +3,7 @@ import {useState, useEffect} from 'react';
 function PaymentPage() {
     const [cards, setCards] = useState([]);
     const [selectedCardId, setSelectedCardId] = useState(0);
+    const [selectedCard, setSelectedCard] = useState({});
     const [value, setValue] = useState(0);
     const [paymentType, setPaymentType] = useState("debit");
 
@@ -23,6 +24,8 @@ function PaymentPage() {
         })
 
         if(response.ok){
+          fetchCards();
+
           alert("O pagamento foi efetuado com sucesso");
       }
       else{
@@ -51,47 +54,84 @@ function PaymentPage() {
         }
     }
   
-      useEffect(() => {
-        fetchCards();
-      }, []);
+    useEffect(() => {
+      fetchCards();
+    }, []);
 
-  return(<>
-            <div class="header"> 
-              <img class="card_vector" src={require("./images/image2.png")} alt="Vetor de cartão"/>
-              <h2> Simulando pagamentos </h2> 
-            </div>
-            
-            <div>
-              Selecione o cartão
-              <select onChange={(event) => setSelectedCardId(event.target.value)}>
-                    <option value={0}>Selecione o cartão</option>
-                    {cards.map(card => (
-                      <option key={card.id} value={card.id}> {card.name + " - " + card.number} </option>
-                    ))}
-              </select>
+    useEffect(() => {
+      setSelectedCard(cards.filter(card => card.id === parseInt(selectedCardId, 10))[0]);
+    }, [cards, selectedCardId]);
 
-              </div>
+    const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
+      dateStyle: "full"
+    })
 
-              <div>
-                Selecione o tipo da operação
-                <select onChange={(event) => {setPaymentType(event.target.value)}}>
-                    <option value="">Selecione</option>
-                    <option value="credit">Crédito</option>
-                    <option value="debit">Débito</option>
-                </select>
+    return(<>
+              <div className="header"> 
+                <img className="card_vector" src={require('./images/image2.png')} alt="Vetor de histórico"/> 
+                <h2> Simulando pagamentos </h2> 
               </div>
               
-
               <div>
-                Defina o valor
-                <input type="number" placeholder="R$" onChange={(event) => {setValue(event.target.value)}}/>
-              </div>
+                Selecione o cartão
+                <select onChange={(event) => setSelectedCardId(event.target.value)}>
+                      <option value={0}>Selecione o cartão</option>
+                      {cards.map(card => (
+                        <option key={card.id} value={card.id}> {card.name + " - " + card.number} </option>
+                      ))}
+                </select>
 
-              <div>
-                <button id="comece_simular" onClick={postPayment}>Realizar pagamento</button>
-              </div>
-        </>
-    );
+                </div>
+
+                <div>
+                  Selecione o tipo da operação
+                  <select onChange={(event) => {setPaymentType(event.target.value)}}>
+                      <option value="">Selecione</option>
+                      <option value="credit">Crédito</option>
+                      <option value="debit">Débito</option>
+                  </select>
+                </div>
+                
+
+                <div>
+                  Defina o valor
+                  <input type="number" placeholder="R$" onChange={(event) => {setValue(event.target.value)}}/>
+                </div>
+
+                <div>
+                  <button id="comece_simular" onClick={postPayment}>Realizar pagamento</button>
+                </div>
+
+                <div className="historico"> 
+                  <img className="historic_vector" src={require("./images/image3.png")} alt="Vetor de histórico"/> 
+                  <h2> Histórico </h2> 
+                </div>
+                      
+                <div className="tabelas">
+                  <table>
+                    <thead>
+                      <tr>
+                          <th> Data </th>
+                          <th> Detalhes </th>
+                          <th> Valor </th>
+                      </tr>
+                    </thead>
+                    
+                    {console.log(selectedCard)}
+
+                    <tbody>
+                        {selectedCard?.payments?.map(payment => (
+                        <tr>
+                            <td> {dateFormatter.format(new Date(payment.dateTime))} </td>
+                            <td> {payment.paymentType} </td>
+                            <td> {payment.value} </td>
+                        </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+          </>
+      );
 }
 
 export default PaymentPage;
