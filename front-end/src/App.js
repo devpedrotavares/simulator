@@ -1,13 +1,13 @@
 import {useState} from 'react';
-import PaymentPage from "./PaymentPage"
+import PaymentPage from "./PaymentPage";
 import CreateCardPage from './CreateCardPage';
 import InitialPage from './InitialPage';
 import AboutUsPage from './AboutUsPage';
 import ContactPage from './ContactPage';
-import "./css/styles.css"
+import "./css/styles.css";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(<InitialPage/>);
+  const [currentPage, setCurrentPage] = useState(<InitialPage setCurrentPage={() => setCurrentPage(<PaymentPage/>)}/>);
 
   return (
     <>
@@ -16,7 +16,7 @@ function App() {
         <div className="sidebar">
           <h2>SimuladorDePagamentos</h2>
             <ul>
-                <li onClick={() => {setCurrentPage(<InitialPage setPage={() => setCurrentPage(<PaymentPage/>)}/>)}}>
+                <li onClick={() => {setCurrentPage(<InitialPage setCurrentPage={() => setCurrentPage(<PaymentPage/>)}/>)}}>
                   <a><i className="fas fa-home"></i>Início</a>
                 </li>
                 <li onClick={() => {setCurrentPage(<CreateCardPage/>)}}>

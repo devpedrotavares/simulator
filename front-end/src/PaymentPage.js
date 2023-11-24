@@ -59,6 +59,10 @@ function PaymentPage() {
     }, []);
 
     useEffect(() => {
+      if(!cards || !selectedCardId) {
+        return;
+      }
+
       setSelectedCard(cards.filter(card => card.id === parseInt(selectedCardId, 10))[0]);
     }, [cards, selectedCardId]);
 
@@ -76,7 +80,7 @@ function PaymentPage() {
                 Selecione o cartão
                 <select onChange={(event) => setSelectedCardId(event.target.value)}>
                       <option value={0}>Selecione o cartão</option>
-                      {cards.map(card => (
+                      {cards?.map(card => (
                         <option key={card.id} value={card.id}> {card.name + " - " + card.number} </option>
                       ))}
                 </select>
@@ -116,14 +120,12 @@ function PaymentPage() {
                           <th> Valor </th>
                       </tr>
                     </thead>
-                    
-                    {console.log(selectedCard)}
 
                     <tbody>
                         {selectedCard?.payments?.map(payment => (
                         <tr>
                             <td> {dateFormatter.format(new Date(payment.dateTime))} </td>
-                            <td> {payment.paymentType} </td>
+                            <td> {payment.paymentType === "debit" ? "débito" : "crédito"} </td>
                             <td> {payment.value} </td>
                         </tr>
                         ))}

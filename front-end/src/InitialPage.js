@@ -1,4 +1,4 @@
-function InitialPage({setPage}) {
+function InitialPage({setCurrentPage}) {
 
     return (<>
                 <div> 
@@ -10,7 +10,7 @@ function InitialPage({setPage}) {
                 </div>
                 
                 <div>
-                    <button className="comece_simular" onClick={setPage}> Comece a simular </button>
+                    <button className="comece_simular" onClick={setCurrentPage}> Comece a simular </button>
                 </div>
             </>
     );
