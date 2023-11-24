@@ -5,11 +5,13 @@ import com.payment.simulator.entities.Payment;
 import com.payment.simulator.entities.constants.PaymentTypeConstants;
 import com.payment.simulator.repositories.CardRepository;
 import com.payment.simulator.repositories.PaymentRepository;
+import com.payment.simulator.services.exceptions.InvalidCardException;
 import com.payment.simulator.services.exceptions.InvalidPaymentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,6 +51,12 @@ public class PaymentService {
         Card card = cardRepository.findById(payment.getCardId())
                 .orElseThrow(() -> new InvalidPaymentException("Cartão não existente"));
 
+        LocalDate expirationDate = card.getExpirationDate();
+
+        if (expirationDate.isBefore(LocalDate.now().minusDays(1))) {
+            throw new InvalidCardException("Este cartão já expirou!");
+        }
+
         BigDecimal value = payment.getValue();
 
         if(paymentType.equals(PaymentTypeConstants.DEBIT)) {
@@ -65,7 +73,7 @@ public class PaymentService {
         else {
             BigDecimal invoice = card.getInvoice();
 
-            if(invoice.add(value).compareTo(card.getLimit()) < 0) {
+            if(invoice.add(value).compareTo(card.getLimit()) > 0) {
                 throw new InvalidPaymentException("Limite estourado");
             }
 
