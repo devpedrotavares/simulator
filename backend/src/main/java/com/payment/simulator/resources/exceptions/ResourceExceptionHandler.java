@@ -1,6 +1,7 @@
 package com.payment.simulator.resources.exceptions;
 
-import com.payment.simulator.services.exceptions.DatabaseException;
+import com.payment.simulator.services.exceptions.InvalidCardException;
+import com.payment.simulator.services.exceptions.InvalidPaymentException;
 import com.payment.simulator.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -13,19 +14,19 @@ import java.time.Instant;
 @ControllerAdvice
 public class ResourceExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
-        String error = "Resource not found";
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+    @ExceptionHandler(InvalidCardException.class)
+    public ResponseEntity<StandardError> invalidCardExceptionHandler(InvalidCardException e) {
+        String error = "Invalid Card Form";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(status.value(), error, e.getMessage());
         return ResponseEntity.status(status).body(err);
     }
 
-    @ExceptionHandler(DatabaseException.class)
-    public ResponseEntity<StandardError> database(DatabaseException e, HttpServletRequest request) {
-        String error = "Database error";
+    @ExceptionHandler(InvalidPaymentException.class)
+    public ResponseEntity<StandardError> invalidPaymentExceptionHandler(InvalidPaymentException e) {
+        String error = "Invalid Payment";
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        StandardError err = new StandardError(status.value(), error, e.getMessage());
         return ResponseEntity.status(status).body(err);
     }
 
